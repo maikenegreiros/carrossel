@@ -1,0 +1,68 @@
+let carouselElements
+let carouselContainer
+let arrowLeftElement
+let arrowRightElement
+let currentElement
+
+export default function({container, elements, arrowLeft, arrowRight}) {
+    carouselContainer = container
+    carouselElements = Array.from(elements)
+    arrowLeftElement = arrowLeft
+    arrowRightElement = arrowRight
+    currentElement = carouselElements[0]
+
+    if (carouselContainer.clientWidth > getTotalWidthOfItems()) return
+
+    carouselContainer.style = `
+    display:flex;
+    justify-content: flex-start;
+    flex-wrap:nowrap;
+    overflow:hidden;`
+
+    arrowLeftElement.addEventListener('click', scrollToLeft)
+    arrowRightElement.addEventListener('click', scrollToRight)
+}
+
+function scrollToLeft() {
+    carouselContainer.scroll({
+        left: carouselContainer.scrollLeft - getWidthPlusPaddingAndMargin(currentElement),
+        behavior: 'smooth' 
+    })
+    backPointer()
+}
+
+function scrollToRight() {
+    carouselContainer.scroll({
+        left: carouselContainer.scrollLeft + getWidthPlusPaddingAndMargin(currentElement),
+        behavior: 'smooth' 
+    })
+    advancePointer()
+}
+
+function advancePointer() {
+    let index = carouselElements.indexOf(currentElement)
+    if(index < carouselElements.length - 1) {
+        currentElement = carouselElements[++index]
+    }
+}
+
+function backPointer() {
+    let index = carouselElements.indexOf(currentElement)
+    if(index > 0) {
+        currentElement = carouselElements[--index]
+    }
+}
+
+function getTotalWidthOfItems() {
+    return carouselElements
+    .map(element => element.clientWidth)
+    .reduce((acc, cur) => acc + cur)
+}
+
+function getWidthPlusPaddingAndMargin(element) {
+    return parseInt(window.getComputedStyle(element).width) +
+    parseInt(window.getComputedStyle(element).paddingLeft) +
+    parseInt(window.getComputedStyle(element).paddingRight) +
+    parseInt(window.getComputedStyle(element).marginLeft) +
+    parseInt(window.getComputedStyle(element).marginRight)
+}
