@@ -19,8 +19,10 @@ export default function({container, elements, arrowLeft, arrowRight}) {
     flex-wrap:nowrap;
     overflow:hidden;`
 
+    updateButtons()
     arrowLeftElement.addEventListener('click', scrollToLeft)
     arrowRightElement.addEventListener('click', scrollToRight)
+    carouselContainer.addEventListener('scroll', updateButtons)
 }
 
 function scrollToLeft() {
@@ -37,6 +39,16 @@ function scrollToRight() {
         behavior: 'smooth' 
     })
     advancePointer()
+}
+
+function updateButtons() {
+    arrowLeftElement.disabled = false
+    arrowRightElement.disabled = false
+    if (!carouselContainer.scrollLeft) {
+        arrowLeftElement.disabled = true
+    } else if (scrolledDistance() === carouselContainer.scrollWidth) {
+        arrowRightElement.disabled = true
+    }
 }
 
 function advancePointer() {
@@ -57,6 +69,10 @@ function getTotalWidthOfItems() {
     return carouselElements
     .map(element => element.clientWidth)
     .reduce((acc, cur) => acc + cur)
+}
+
+function scrolledDistance() {
+    return carouselContainer.clientWidth + carouselContainer.scrollLeft
 }
 
 function getWidthPlusPaddingAndMargin(element) {
