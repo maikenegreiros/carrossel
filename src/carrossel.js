@@ -11,13 +11,13 @@ export default function({container, elements, arrowLeft, arrowRight}) {
     arrowRightElement = arrowRight
     currentElement = carouselElements[0]
 
-    if (carouselContainer.clientWidth > getTotalWidthOfItems()) return
-
     carouselContainer.style = `
     display:flex;
     justify-content: flex-start;
     flex-wrap:nowrap;
     overflow:hidden;`
+
+    if (carouselContainer.clientWidth > getTotalWidthOfItems()) return
 
     updateButtons()
     arrowLeftElement.addEventListener('click', scrollToLeft)
