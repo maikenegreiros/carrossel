@@ -17,7 +17,7 @@ export default function({container, elements, arrowLeft, arrowRight}) {
     flex-wrap:nowrap;
     overflow:hidden;`
 
-    if (carouselContainer.clientWidth > getTotalWidthOfItems()) return
+    if (carouselContainer.clientWidth > carouselContainer.scrollWidth) return
 
     updateButtons()
     arrowLeftElement.addEventListener('click', scrollToLeft)
@@ -65,20 +65,14 @@ function backPointer() {
     }
 }
 
-function getTotalWidthOfItems() {
-    return carouselElements
-    .map(element => getWidthPlusPaddingAndMargin(element))
-    .reduce((acc, cur) => acc + cur)
-}
-
 function scrolledDistance() {
     return carouselContainer.clientWidth + carouselContainer.scrollLeft
 }
 
 function getWidthPlusPaddingAndMargin(element) {
-    return parseInt(window.getComputedStyle(element).width) +
-    parseInt(window.getComputedStyle(element).paddingLeft) +
-    parseInt(window.getComputedStyle(element).paddingRight) +
-    parseInt(window.getComputedStyle(element).marginLeft) +
-    parseInt(window.getComputedStyle(element).marginRight)
+    return parseFloat(window.getComputedStyle(element).width) +
+    parseFloat(window.getComputedStyle(element).paddingLeft) +
+    parseFloat(window.getComputedStyle(element).paddingRight) +
+    parseFloat(window.getComputedStyle(element).marginLeft) +
+    parseFloat(window.getComputedStyle(element).marginRight)
 }
