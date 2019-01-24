@@ -67,7 +67,7 @@ function backPointer() {
 
 function getTotalWidthOfItems() {
     return carouselElements
-    .map(element => element.clientWidth)
+    .map(element => getWidthPlusPaddingAndMargin(element))
     .reduce((acc, cur) => acc + cur)
 }
 
