@@ -1,1 +1,84 @@
-"use strict";exports.__esModule=!0,exports.default=_default;var carouselElements,carouselContainer,arrowLeftElement,arrowRightElement,currentElement;function _default(a){var b=a.container,c=a.elements,d=a.arrowLeft,e=a.arrowRight;carouselContainer=b,carouselElements=Array.from(c),arrowLeftElement=d,arrowRightElement=e,currentElement=carouselElements[0];carouselContainer.clientWidth>getTotalWidthOfItems()||(carouselContainer.style="\n    display:flex;\n    justify-content: flex-start;\n    flex-wrap:nowrap;\n    overflow:hidden;",updateButtons(),arrowLeftElement.addEventListener("click",scrollToLeft),arrowRightElement.addEventListener("click",scrollToRight),carouselContainer.addEventListener("scroll",updateButtons))}function scrollToLeft(){carouselContainer.scroll({left:carouselContainer.scrollLeft-getWidthPlusPaddingAndMargin(currentElement),behavior:"smooth"}),backPointer()}function scrollToRight(){carouselContainer.scroll({left:carouselContainer.scrollLeft+getWidthPlusPaddingAndMargin(currentElement),behavior:"smooth"}),advancePointer()}function updateButtons(){arrowLeftElement.disabled=!1,arrowRightElement.disabled=!1,carouselContainer.scrollLeft?scrolledDistance()===carouselContainer.scrollWidth&&(arrowRightElement.disabled=!0):arrowLeftElement.disabled=!0}function advancePointer(){var a=carouselElements.indexOf(currentElement);a<carouselElements.length-1&&(currentElement=carouselElements[++a])}function backPointer(){var a=carouselElements.indexOf(currentElement);0<a&&(currentElement=carouselElements[--a])}function getTotalWidthOfItems(){return carouselElements.map(function(a){return a.clientWidth}).reduce(function(a,b){return a+b})}function scrolledDistance(){return carouselContainer.clientWidth+carouselContainer.scrollLeft}function getWidthPlusPaddingAndMargin(a){return parseInt(window.getComputedStyle(a).width)+parseInt(window.getComputedStyle(a).paddingLeft)+parseInt(window.getComputedStyle(a).paddingRight)+parseInt(window.getComputedStyle(a).marginLeft)+parseInt(window.getComputedStyle(a).marginRight)}
+let carouselElements
+let carouselContainer
+let arrowLeftElement
+let arrowRightElement
+let currentElement
+
+export default function({container, elements, arrowLeft, arrowRight}) {
+    carouselContainer = container
+    carouselElements = Array.from(elements)
+    arrowLeftElement = arrowLeft
+    arrowRightElement = arrowRight
+    currentElement = carouselElements[0]
+
+    carouselContainer.style = `
+    display:flex;
+    justify-content: flex-start;
+    flex-wrap:nowrap;
+    overflow:hidden;`
+
+    if (carouselContainer.clientWidth > getTotalWidthOfItems()) return
+
+    updateButtons()
+    arrowLeftElement.addEventListener('click', scrollToLeft)
+    arrowRightElement.addEventListener('click', scrollToRight)
+    carouselContainer.addEventListener('scroll', updateButtons)
+}
+
+function scrollToLeft() {
+    carouselContainer.scroll({
+        left: carouselContainer.scrollLeft - getWidthPlusPaddingAndMargin(currentElement),
+        behavior: 'smooth' 
+    })
+    backPointer()
+}
+
+function scrollToRight() {
+    carouselContainer.scroll({
+        left: carouselContainer.scrollLeft + getWidthPlusPaddingAndMargin(currentElement),
+        behavior: 'smooth' 
+    })
+    advancePointer()
+}
+
+function updateButtons() {
+    arrowLeftElement.disabled = false
+    arrowRightElement.disabled = false
+    if (!carouselContainer.scrollLeft) {
+        arrowLeftElement.disabled = true
+    } else if (scrolledDistance() === carouselContainer.scrollWidth) {
+        arrowRightElement.disabled = true
+    }
+}
+
+function advancePointer() {
+    let index = carouselElements.indexOf(currentElement)
+    if(index < carouselElements.length - 1) {
+        currentElement = carouselElements[++index]
+    }
+}
+
+function backPointer() {
+    let index = carouselElements.indexOf(currentElement)
+    if(index > 0) {
+        currentElement = carouselElements[--index]
+    }
+}
+
+function getTotalWidthOfItems() {
+    return carouselElements
+    .map(element => element.clientWidth)
+    .reduce((acc, cur) => acc + cur)
+}
+
+function scrolledDistance() {
+    return carouselContainer.clientWidth + carouselContainer.scrollLeft
+}
+
+function getWidthPlusPaddingAndMargin(element) {
+    return parseInt(window.getComputedStyle(element).width) +
+    parseInt(window.getComputedStyle(element).paddingLeft) +
+    parseInt(window.getComputedStyle(element).paddingRight) +
+    parseInt(window.getComputedStyle(element).marginLeft) +
+    parseInt(window.getComputedStyle(element).marginRight)
+}
